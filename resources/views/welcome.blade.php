@@ -42,7 +42,7 @@
 
             <br/>
 
-            <div class="list-group">
+            <div class="list-group" v-cloak>
                 <a href="#"
                    class="list-group-item list-group-item-action flex-column align-items-start"
                    v-for="result in results"

@@ -1,12 +1,5 @@
 <script>
     export default {
-        mounted() {
-            console.log('component mounted.');
-        },
-
-        created() {
-            console.log('component created.')
-        },
 
         data(){
             return{
@@ -18,6 +11,10 @@
         },
 
         methods: {
+
+            /**
+             * load results for a new search
+             */
             loadNew: _.throttle(function() {
                 this.page = 0;
                 this.results = [];
@@ -25,12 +22,18 @@
                 this.search();
             }, 100),
 
+            /**
+             * load more results for an existing search
+             */
             loadMore: function() {
                 this.page++;
 
                 this.search();
             },
 
+            /**
+             * make the actual api call for new and load more searches
+             */
             search: function () {
                 console.log("searching", this.search_category, this.search_term);
 
@@ -42,6 +45,12 @@
                 );
             },
 
+            /**
+             * once we get search results from the api, l
+             * oad them up so we can display them to the user
+             *
+             * @param response
+             */
             successCallback: function(response) {
                 console.log("api success: " + response.data);
 
@@ -54,6 +63,11 @@
                 console.log("error loading activity");
             },
 
+            /**
+             * build the GET parameters that we send in the search api call
+             *
+             * @returns {{params: {search_category: *, search_term: *, page: *}}}
+             */
             getOptions: function() {
                 return {
                     params: {

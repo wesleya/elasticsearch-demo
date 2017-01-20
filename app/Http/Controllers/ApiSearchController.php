@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use Illuminate\Http\Response;
 
 class ApiSearchController extends Controller
 {
@@ -36,6 +35,11 @@ class ApiSearchController extends Controller
      */
     protected $elasticsearchPassword;
 
+    /**
+     * ApiSearchController constructor.
+     *
+     * @param Client $client
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
@@ -44,6 +48,11 @@ class ApiSearchController extends Controller
         $this->elasticsearchPassword = env('ELASTICSEARCH_PASSWORD');
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
     public function index(Request $request)
     {
         switch ($request->input('search_category')) {
@@ -75,6 +84,14 @@ class ApiSearchController extends Controller
         return $results;
     }
 
+    /**
+     * Run a product query against elasticseaerch
+     *
+     * @param $search
+     * @param $page
+     * @param $limit
+     * @return \GuzzleHttp\Psr7\Response
+     */
     protected function productSearch($search, $page, $limit)
     {
         $terms = [
@@ -85,6 +102,14 @@ class ApiSearchController extends Controller
         return $this->search($terms, $page, $limit);
     }
 
+    /**
+     * Run a company search against elasticsearch
+     *
+     * @param array $search
+     * @param int $page
+     * @param int $limit
+     * @return \GuzzleHttp\Psr7\Response
+     */
     protected function companySearch($search, $page, $limit)
     {
         $terms = [
@@ -94,6 +119,14 @@ class ApiSearchController extends Controller
         return $this->search($terms, $page, $limit);
     }
 
+    /**
+     * Run an issue search against elasticsearch
+     *
+     * @param array $search
+     * @param int $page
+     * @param int $limit
+     * @return \GuzzleHttp\Psr7\Response
+     */
     protected function issueSearch($search, $page, $limit)
     {
         $terms = [
@@ -104,6 +137,14 @@ class ApiSearchController extends Controller
         return $this->search($terms, $page, $limit);
     }
 
+    /**
+     * Make api call to elastic search
+     *
+     * @param array $terms
+     * @param int $page
+     * @param int $limit
+     * @return \GuzzleHttp\Psr7\Response
+     */
     protected function search($terms, $page, $limit)
     {
         return $this->client->request('GET', $this->elasticsearchApi . "consumer_complaints/complaint/_search", [
@@ -113,9 +154,7 @@ class ApiSearchController extends Controller
                 "size" => $limit,
                 "query" => [
                     "bool" => [
-                        "should" => [
-                            $terms
-                        ]
+                        "should" => [$terms]
                     ]
                 ]
             ]

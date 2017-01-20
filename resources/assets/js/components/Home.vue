@@ -12,6 +12,7 @@
             return{
                 search_category: 'product',
                 search_term: '',
+                page: 0,
                 results: []
             }
         },
@@ -27,7 +28,7 @@
                         this.errorCallback
                 );
 
-            }, 2000),
+            }, 100),
 
             successCallback: function(response) {
                 console.log("api success: " + response.data);
@@ -43,7 +44,8 @@
                 return {
                     params: {
                         search_category: this.search_category,
-                        search_term: this.search_term
+                        search_term: this.search_term,
+                        page: this.page
                     }
                 };
 

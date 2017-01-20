@@ -17,9 +17,12 @@
 </head>
 <body style="height: 100%;">
 
-    @yield('content')
+    <div id="app">
+        @yield('content')
+    </div>
 
     <!-- Scripts -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.js"></script>
     <script src="{{ elixir("js/app.js") }}"></script>

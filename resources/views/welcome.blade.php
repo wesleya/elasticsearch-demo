@@ -18,7 +18,7 @@
                             <select class="form-control form-control-lg"
                                     style="margin-bottom: 10px;"
                                     v-model="search_category"
-                                    v-on:change="search"
+                                    v-on:change="loadNew"
                             >
                                 <option value="product">Product</option>
                                 <option value="company">Company</option>
@@ -31,9 +31,9 @@
                             <input class="form-control form-control-lg"
                                    style="margin-bottom: 10px;"
                                    type="search"
-                                   placeholder="Search Term"
+                                   placeholder="Search Term e.g. loan, credit"
                                    v-model="search_term"
-                                   v-on:keyup="search"
+                                   v-on:keyup="loadNew"
                             >
                         </div>
                     </div>
@@ -60,6 +60,7 @@
                 <button type="button"
                         class="btn btn-primary btn-lg btn-block"
                         v-if="results.length"
+                        v-on:click="loadMore"
                 >
                     Load More
                 </button>

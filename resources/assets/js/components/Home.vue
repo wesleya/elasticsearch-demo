@@ -18,7 +18,20 @@
         },
 
         methods: {
-            search: _.throttle(function () {
+            loadNew: _.throttle(function() {
+                this.page = 0;
+                this.results = [];
+
+                this.search();
+            }, 100),
+
+            loadMore: function() {
+                this.page++;
+
+                this.search();
+            },
+
+            search: function () {
                 console.log("searching", this.search_category, this.search_term);
 
                 var options = this.getOptions();
@@ -27,13 +40,14 @@
                         this.successCallback,
                         this.errorCallback
                 );
-
-            }, 100),
+            },
 
             successCallback: function(response) {
                 console.log("api success: " + response.data);
 
-                Vue.set(this, 'results', response.data);
+                var results = this.results.concat(response.data);
+
+                Vue.set(this, 'results', results);
             },
 
             errorCallback: function(response) {

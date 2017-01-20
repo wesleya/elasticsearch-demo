@@ -52,6 +52,7 @@
                         <small>@{{ result._source.date_received }}</small>
                     </div>
                     <p class="mb-1">@{{ result._source.issue }}</p>
+                    <p class="mb-1">@{{ result._source.sub_issue }}</p>
                     <small>@{{ result._source.company }}</small>
                 </a>
 

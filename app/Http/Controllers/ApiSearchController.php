@@ -46,11 +46,29 @@ class ApiSearchController extends Controller
 
     public function index(Request $request)
     {
-        $response = $this->productSearch(
-            $request->input('search_term'),
-            $request->input('page'),
-            10
-        );
+        switch ($request->input('search_category')) {
+            case 'product':
+                $response = $this->productSearch(
+                    $request->input('search_term'),
+                    $request->input('page'),
+                    10
+                );
+                break;
+            case 'company':
+                $response = $this->companySearch(
+                    $request->input('search_term'),
+                    $request->input('page'),
+                    10
+                );
+                break;
+            case 'issue':
+                $response = $this->issueSearch(
+                    $request->input('search_term'),
+                    $request->input('page'),
+                    10
+                );
+                break;
+        }
 
         $results = json_decode($response->getBody()->getContents())->hits->hits;
 
@@ -58,6 +76,35 @@ class ApiSearchController extends Controller
     }
 
     protected function productSearch($search, $page, $limit)
+    {
+        $terms = [
+            [ "term" => [ "product" => $search] ],
+            [ "term" => [ "sub_product" => $search] ]
+        ];
+
+        return $this->search($terms, $page, $limit);
+    }
+
+    protected function companySearch($search, $page, $limit)
+    {
+        $terms = [
+            [ "term" => [ "company" => $search] ]
+        ];
+
+        return $this->search($terms, $page, $limit);
+    }
+
+    protected function issueSearch($search, $page, $limit)
+    {
+        $terms = [
+            [ "term" => [ "issue" => $search] ],
+            [ "term" => [ "sub_issue" => $search] ],
+        ];
+
+        return $this->search($terms, $page, $limit);
+    }
+
+    protected function search($terms, $page, $limit)
     {
         return $this->client->request('GET', $this->elasticsearchApi . "consumer_complaints/complaint/_search", [
             'auth' => [$this->elasticsearchUser, $this->elasticsearchPassword],
@@ -67,22 +114,11 @@ class ApiSearchController extends Controller
                 "query" => [
                     "bool" => [
                         "should" => [
-                            [ "term" => [ "product" => $search] ],
-                            [ "term" => [ "sub_product" => $search] ]
+                            $terms
                         ]
                     ]
                 ]
             ]
         ]);
-    }
-
-    protected function companySearch($search)
-    {
-
-    }
-
-    protected function issueSearch($search)
-    {
-
     }
 }

@@ -6,8 +6,13 @@
                 search_category: 'product',
                 search_term: '',
                 page: 0,
-                results: []
+                results: [],
+                detail: null
             }
+        },
+
+        created() {
+            window.eventHub.$on('show-detail', this.showDetail);
         },
 
         methods: {
@@ -77,6 +82,14 @@
                     }
                 };
 
+            },
+
+            showDetail: function(detail) {
+                console.log(detail);
+
+                this.detail = detail;
+
+                $('#detail-modal').modal('show');
             }
         }
     }

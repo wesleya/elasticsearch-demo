@@ -17,6 +17,8 @@
 
             @include('results')
 
+            @include('details')
+
         </div>
     </home>
 @endsection

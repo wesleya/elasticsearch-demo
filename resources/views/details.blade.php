@@ -8,14 +8,14 @@
             </div>
             <div class="modal-body">
                 <div class="list-group">
-                    <a class="list-group-item list-group-item-action flex-column align-items-start"
+                    <div class="list-group-item list-group-item-action flex-column align-items-start"
                        v-for="(item, index) in detail"
                     >
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">@{{ index }}</h5>
                         </div>
                         <p class="mb-1">@{{ item }}</p>
-                    </a>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

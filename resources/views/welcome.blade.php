@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <home inline-template>
+    <home inline-template v-cloak>
         <div class="container">
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent; margin-bottom: 0px;">
@@ -11,12 +11,15 @@
                 </div>
             </div>
 
+            {{-- form for searching through resluts --}}
             @include('form')
 
             <br/>
 
+            {{-- list of results from the search --}}
             @include('results')
 
+            {{-- modal to show details of a complaint when you click on a complaint from the results list --}}
             @include('details')
 
         </div>

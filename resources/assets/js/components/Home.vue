@@ -84,6 +84,11 @@
 
             },
 
+            /**
+             * show complaint details in a modal
+             *
+             * @param detail
+             */
             showDetail: function(detail) {
                 console.log(detail);
 

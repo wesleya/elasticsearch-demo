@@ -1,4 +1,4 @@
-<div class="list-group" v-cloak>
+<div class="list-group">
     <div v-for="result in results">
         @include('complaint')
     </div>

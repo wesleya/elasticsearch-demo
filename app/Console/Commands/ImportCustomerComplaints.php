@@ -90,7 +90,12 @@ class ImportCustomerComplaints extends Command
 
         foreach($csvFile as $row) {
             $this->log($row, $count);
-            $this->index($row, $count, $production);
+
+            try {
+                $this->index($row, $count, $production);
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+            }
 
             $count++;
             usleep($throttle);

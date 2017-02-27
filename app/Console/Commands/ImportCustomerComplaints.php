@@ -23,7 +23,7 @@ class ImportCustomerComplaints extends Command
      *
      * @var string
      */
-    protected $description = 'Import customer complaints from CSV to Elasticsearch instance';
+    protected $description = 'Import customer complaints from CSV to Elasticsearch instance. example: php artisan complaints:import \'/home/forge/Consumer_Complaints.csv\' > ~/import-log-2017-02-27.log 2>&1';
 
     /**
      * Guzzle client
@@ -119,7 +119,7 @@ class ImportCustomerComplaints extends Command
             return;
         }
 
-        $response = $this->client->request('POST', $this->elasticsearchApi . "consumer_complaints/complaint", [
+        $response = $this->client->request('POST', $this->elasticsearchApi . "/consumer_complaints/complaint", [
             'auth' => [$this->elasticsearchUser, $this->elasticsearchPassword],
             'json' => [
                 "date_received" => DateTime::createFromFormat('m/d/Y', $row[0])->format('Y-m-d'),

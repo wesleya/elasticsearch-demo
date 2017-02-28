@@ -19,21 +19,21 @@ class ApiSearchController extends Controller
      *
      * @var string
      */
-    protected $elasticsearchApi;
+    protected $elasticApi;
 
     /**
      * Elasticsearch user
      *
      * @var string
      */
-    protected $elasticsearchUser;
+    protected $elasticUser;
 
     /**
      * Elasticsearch password
      *
      * @var string
      */
-    protected $elasticsearchPassword;
+    protected $elasticPassword;
 
     /**
      * ApiSearchController constructor.
@@ -43,9 +43,9 @@ class ApiSearchController extends Controller
     public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->elasticsearchApi = env('ELASTICSEARCH_API');
-        $this->elasticsearchUser = env('ELASTICSEARCH_USER');
-        $this->elasticsearchPassword = env('ELASTICSEARCH_PASSWORD');
+        $this->elasticApi = env('ELASTICSEARCH_API');
+        $this->elasticUser = env('ELASTICSEARCH_USER');
+        $this->elasticPassword = env('ELASTICSEARCH_PASSWORD');
     }
 
     /**
@@ -57,26 +57,16 @@ class ApiSearchController extends Controller
     {
         switch ($request->input('search_category')) {
             case 'product':
-                $response = $this->productSearch(
-                    $request->input('search_term'),
-                    $request->input('page'),
-                    10
-                );
+                $response = $this->productSearch($request);
                 break;
             case 'company':
-                $response = $this->companySearch(
-                    $request->input('search_term'),
-                    $request->input('page'),
-                    10
-                );
+                $response = $this->companySearch($request);
                 break;
             case 'issue':
-                $response = $this->issueSearch(
-                    $request->input('search_term'),
-                    $request->input('page'),
-                    10
-                );
+                $response = $this->issueSearch($request);
                 break;
+            default:
+                $response = $this->globalSearch($request);
         }
 
         $results = json_decode($response->getBody()->getContents())->hits->hits;
@@ -85,56 +75,83 @@ class ApiSearchController extends Controller
     }
 
     /**
-     * Run a product query against elasticseaerch
-     *
-     * @param $search
-     * @param $page
-     * @param $limit
+     * @param Request $request
      * @return \GuzzleHttp\Psr7\Response
      */
-    protected function productSearch($search, $page, $limit)
+    public function globalSearch(Request $request)
     {
         $terms = [
-            [ "term" => [ "product" => $search] ],
-            [ "term" => [ "sub_product" => $search] ]
+            [ "term" => [ "product" => $request->input('search_term')] ],
+            [ "term" => [ "sub_product" => $request->input('search_term')] ],
+            [ "term" => [ "company" => $request->input('search_term')] ],
+            [ "term" => [ "issue" => $request->input('search_term')] ],
+            [ "term" => [ "sub_issue" => $request->input('search_term')] ]
         ];
 
-        return $this->search($terms, $page, $limit);
+        return $this->search(
+            $terms,
+            $request->input('page'),
+            $request->input('limit')
+        );
+    }
+
+    /**
+     * Run a product query against elasticsearch
+     *
+     * @param Request $request
+     * @return \GuzzleHttp\Psr7\Response
+     */
+    protected function productSearch(Request $request)
+    {
+        $terms = [
+            [ "term" => [ "product" => $request->input('search_term')] ],
+            [ "term" => [ "sub_product" => $request->input('search_term')] ]
+        ];
+
+        return $this->search(
+            $terms,
+            $request->input('page'),
+            $request->input('limit')
+        );
     }
 
     /**
      * Run a company search against elasticsearch
      *
-     * @param array $search
-     * @param int $page
-     * @param int $limit
+     * @param Request $request
      * @return \GuzzleHttp\Psr7\Response
      */
-    protected function companySearch($search, $page, $limit)
+    protected function companySearch(Request $request)
     {
         $terms = [
-            [ "term" => [ "company" => $search] ]
+            [ "term" => [ "company" => $request->input('search_term')] ]
         ];
 
-        return $this->search($terms, $page, $limit);
+        return $this->search(
+            $terms,
+            $request->input('page'),
+            $request->input('limit')
+        );
     }
 
     /**
      * Run an issue search against elasticsearch
      *
-     * @param array $search
-     * @param int $page
-     * @param int $limit
+     * @param Request $request
      * @return \GuzzleHttp\Psr7\Response
      */
-    protected function issueSearch($search, $page, $limit)
+    protected function issueSearch(Request $request)
     {
         $terms = [
-            [ "term" => [ "issue" => $search] ],
-            [ "term" => [ "sub_issue" => $search] ],
+            [ "term" => [ "issue" => $request->input('search_term')] ],
+            [ "term" => [ "sub_issue" => $request->input('search_term')] ],
         ];
 
-        return $this->search($terms, $page, $limit);
+        return $this->search(
+            $terms,
+            $request->input('page'),
+            $request->input('limit')
+        );
     }
 
     /**
@@ -147,8 +164,8 @@ class ApiSearchController extends Controller
      */
     protected function search($terms, $page, $limit)
     {
-        return $this->client->request('GET', $this->elasticsearchApi . "/consumer_complaints/complaint/_search", [
-            'auth' => [$this->elasticsearchUser, $this->elasticsearchPassword],
+        return $this->client->request('GET', "{$this->elasticApi}/consumer_complaints/complaint/_search", [
+            'auth' => [$this->elasticUser, $this->elasticPassword],
             'json' => [
                 "from" => $page,
                 "size" => $limit,

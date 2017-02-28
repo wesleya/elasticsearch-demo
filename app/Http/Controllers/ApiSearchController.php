@@ -147,7 +147,7 @@ class ApiSearchController extends Controller
      */
     protected function search($terms, $page, $limit)
     {
-        return $this->client->request('GET', $this->elasticsearchApi . "consumer_complaints/complaint/_search", [
+        return $this->client->request('GET', $this->elasticsearchApi . "/consumer_complaints/complaint/_search", [
             'auth' => [$this->elasticsearchUser, $this->elasticsearchPassword],
             'json' => [
                 "from" => $page,

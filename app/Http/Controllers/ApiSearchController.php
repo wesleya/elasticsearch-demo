@@ -81,11 +81,11 @@ class ApiSearchController extends Controller
     public function globalSearch(Request $request)
     {
         $terms = [
-            [ "term" => [ "product" => $request->input('search_term')] ],
-            [ "term" => [ "sub_product" => $request->input('search_term')] ],
-            [ "term" => [ "company" => $request->input('search_term')] ],
-            [ "term" => [ "issue" => $request->input('search_term')] ],
-            [ "term" => [ "sub_issue" => $request->input('search_term')] ]
+            [ "match" => [ "product" => $request->input('search_term')] ],
+            [ "match" => [ "sub_product" => $request->input('search_term')] ],
+            [ "match" => [ "company" => $request->input('search_term')] ],
+            [ "match" => [ "issue" => $request->input('search_term')] ],
+            [ "match" => [ "sub_issue" => $request->input('search_term')] ]
         ];
 
         return $this->search(
@@ -104,8 +104,8 @@ class ApiSearchController extends Controller
     protected function productSearch(Request $request)
     {
         $terms = [
-            [ "term" => [ "product" => $request->input('search_term')] ],
-            [ "term" => [ "sub_product" => $request->input('search_term')] ]
+            [ "match" => [ "product" => $request->input('search_term')] ],
+            [ "match" => [ "sub_product" => $request->input('search_term')] ]
         ];
 
         return $this->search(
@@ -124,7 +124,7 @@ class ApiSearchController extends Controller
     protected function companySearch(Request $request)
     {
         $terms = [
-            [ "term" => [ "company" => $request->input('search_term')] ]
+            [ "match" => [ "company" => $request->input('search_term')] ]
         ];
 
         return $this->search(
@@ -143,8 +143,8 @@ class ApiSearchController extends Controller
     protected function issueSearch(Request $request)
     {
         $terms = [
-            [ "term" => [ "issue" => $request->input('search_term')] ],
-            [ "term" => [ "sub_issue" => $request->input('search_term')] ],
+            [ "match" => [ "issue" => $request->input('search_term')] ],
+            [ "match" => [ "sub_issue" => $request->input('search_term')] ],
         ];
 
         return $this->search(

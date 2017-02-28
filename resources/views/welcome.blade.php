@@ -14,8 +14,6 @@
             {{-- form for searching through resluts --}}
             @include('form')
 
-            <br/>
-
             {{-- list of results from the search --}}
             @include('results')
 

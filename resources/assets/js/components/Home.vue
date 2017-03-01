@@ -77,7 +77,7 @@
             getOptions: function() {
                 return {
                     params: {
-                        search_category: this.search_category,
+                        search_method: this.search_category,
                         search_term: this.search_term,
                         page: this.page,
                         limit: this.limit

@@ -2,50 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Elasticsearch\Search;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
+use Illuminate\Validation\Rule;
 
 class ApiSearchController extends Controller
 {
     /**
-     * Guzzle client
+     * Elasticsearch search helper
      *
-     * @var Client
+     * @var Search
      */
-    protected $client;
+    protected $search;
 
     /**
-     * Elasticsearch api uri
+     * Valid search types
      *
-     * @var string
+     * @var array
      */
-    protected $elasticApi;
-
-    /**
-     * Elasticsearch user
-     *
-     * @var string
-     */
-    protected $elasticUser;
-
-    /**
-     * Elasticsearch password
-     *
-     * @var string
-     */
-    protected $elasticPassword;
+    protected static $searchTypes = [
+        'product',
+        'company',
+        'issue',
+        'general'
+    ];
 
     /**
      * ApiSearchController constructor.
-     *
-     * @param Client $client
      */
-    public function __construct(Client $client)
+    public function __construct()
     {
-        $this->client = $client;
-        $this->elasticApi = env('ELASTICSEARCH_API');
-        $this->elasticUser = env('ELASTICSEARCH_USER');
-        $this->elasticPassword = env('ELASTICSEARCH_PASSWORD');
+        $this->search = Search::create();
     }
 
     /**
@@ -55,138 +42,32 @@ class ApiSearchController extends Controller
      */
     public function index(Request $request)
     {
-        switch ($request->input('search_category')) {
-            case 'product':
-                $response = $this->productSearch($request);
-                break;
-            case 'company':
-                $response = $this->companySearch($request);
-                break;
-            case 'issue':
-                $response = $this->issueSearch($request);
-                break;
-            default:
-                $response = $this->globalSearch($request);
-        }
+        $this->validate($request, $this->rules());
 
-        $results = json_decode($response->getBody()->getContents())->hits->hits;
+        $method = $request->input('search_method');
+        $term = $request->input('search_term');
+        $page = $request->input('page');
+        $limit = $request->input('limit');
 
-        return $results;
+        return $this->search->$method($term, $page, $limit);
     }
 
     /**
-     * @param Request $request
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    public function globalSearch(Request $request)
-    {
-        $terms = [
-            $this->match('product', $request->input('search_term')),
-            $this->match('sub_product', $request->input('search_term')),
-            $this->match('company', $request->input('search_term')),
-            $this->match('issue', $request->input('search_term')),
-            $this->match('sub_issue', $request->input('search_term'))
-        ];
-
-        return $this->search(
-            $terms,
-            $request->input('page'),
-            $request->input('limit')
-        );
-    }
-
-    /**
-     * Run a product query against elasticsearch
+     * Get validation rules
      *
-     * @param Request $request
-     * @return \GuzzleHttp\Psr7\Response
+     * @return array
      */
-    protected function productSearch(Request $request)
-    {
-        $terms = [
-            $this->match('product', $request->input('search_term')),
-            $this->match('sub_product', $request->input('search_term')),
-        ];
-
-        return $this->search(
-            $terms,
-            $request->input('page'),
-            $request->input('limit')
-        );
-    }
-
-    /**
-     * Run a company search against elasticsearch
-     *
-     * @param Request $request
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    protected function companySearch(Request $request)
-    {
-        $terms = [
-            $this->match('company', $request->input('search_term'))
-        ];
-
-        return $this->search(
-            $terms,
-            $request->input('page'),
-            $request->input('limit')
-        );
-    }
-
-    /**
-     * Run an issue search against elasticsearch
-     *
-     * @param Request $request
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    protected function issueSearch(Request $request)
-    {
-        $query = [
-            $this->match('issue', $request->input('search_term')),
-            $this->match('sub_issue', $request->input('search_term'))
-        ];
-
-        return $this->search(
-            $query,
-            $request->input('page'),
-            $request->input('limit')
-        );
-    }
-
-    /**
-     * Make api call to elastic search
-     *
-     * @param array $query
-     * @param int $page
-     * @param int $limit
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    protected function search($query, $page, $limit)
-    {
-        return $this->client->request('GET', "{$this->elasticApi}/consumer_complaints/complaint/_search", [
-            'auth' => [$this->elasticUser, $this->elasticPassword],
-            'json' => [
-                "from" => $page,
-                "size" => $limit,
-                "query" => [
-                    "bool" => [
-                        "should" => [$query]
-                    ]
-                ]
-            ]
-        ]);
-    }
-
-    protected function match($field, $value)
+    protected function rules()
     {
         return [
-            "match" => [
-                $field => [
-                    "query" => $value,
-                    "analyzer" => "standard"
-                ]
-            ]
+            'search_method' => [
+                'required',
+                Rule::in(self::$searchTypes),
+            ],
+            'search_term' => 'required',
+            'page' => ['required', 'integer'],
+            'limit' => ['required', 'integer']
         ];
     }
+
 }

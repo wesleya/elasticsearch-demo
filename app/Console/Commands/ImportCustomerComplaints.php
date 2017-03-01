@@ -85,6 +85,17 @@ class ImportCustomerComplaints extends Command
             return;
         }
 
+        /**
+         * refactor todo:
+         *
+         * 1. get csv columns
+         * 2. convert column names to use underscores instead of spaces
+         * 3. verify these columns exist on the specified index?
+         * 4. for loop to create documents with column names as keys
+         * 5. for each key value pair, detect date types, convert it into specified date type
+         * 6. use the Elasticsearch/Index class to insert the document
+         */
+
         $csvFile = new Csv\CsvFile($filePath);
         $count = 0;
 

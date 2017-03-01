@@ -6,6 +6,34 @@ use GuzzleHttp\Client;
 class Search
 {
     /**
+     * Guzzle client
+     *
+     * @var Client
+     */
+    protected $client;
+
+    /**
+     * URL for api endpoint
+     *
+     * @var string
+     */
+    protected $api;
+
+    /**
+     * Elasticsearch user with at least read permissions
+     *
+     * @var string
+     */
+    protected $user;
+
+    /**
+     * Elasticsearch for $user
+     *
+     * @var string
+     */
+    protected $password;
+
+    /**
      * Elasticsearch constructor.
      *
      * @param Client $client

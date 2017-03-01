@@ -1,5 +1,5 @@
 <?php
-namespace App\Elasticsearch;
+namespace App\CustomerComplaints;
 
 use GuzzleHttp\Client;
 

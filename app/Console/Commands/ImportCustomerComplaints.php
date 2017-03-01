@@ -2,11 +2,18 @@
 
 namespace App\Console\Commands;
 
+use App\CustomerComplaints\Index;
 use Illuminate\Console\Command;
-use Keboola\Csv;
-use GuzzleHttp\Client;
+use League\Csv;
 use DateTime;
 
+/**
+ * Class ImportCustomerComplaints
+ *
+ * example: '/home/forge/Consumer_Complaints.csv' > ~/import-log-2017-02-27.log 2>&1
+ *
+ * @package App\Console\Commands
+ */
 class ImportCustomerComplaints extends Command
 {
     /**
@@ -23,35 +30,12 @@ class ImportCustomerComplaints extends Command
      *
      * @var string
      */
-    protected $description = 'Import customer complaints from CSV to Elasticsearch instance. example: php artisan complaints:import \'/home/forge/Consumer_Complaints.csv\' > ~/import-log-2017-02-27.log 2>&1';
+    protected $description = 'Import customer complaints from CSV to Elasticsearch instance. example: php artisan complaints:import';
 
     /**
-     * Guzzle client
-     *
-     * @var Client
+     * @var Index
      */
-    protected $client;
-
-    /**
-     * Elasticsearch api uri
-     *
-     * @var string
-     */
-    protected $elasticsearchApi;
-
-    /**
-     * Elasticsearch user
-     *
-     * @var string
-     */
-    protected $elasticsearchUser;
-
-    /**
-     * Elasticsearch password
-     *
-     * @var string
-     */
-    protected $elasticsearchPassword;
+    protected $index;
 
     /**
      * Create a new command instance.
@@ -59,12 +43,9 @@ class ImportCustomerComplaints extends Command
      * @param Client $client
      * @return void
      */
-    public function __construct(Client $client)
+    public function __construct()
     {
-        $this->client = $client;
-        $this->elasticsearchApi = env('ELASTICSEARCH_API');
-        $this->elasticsearchUser = env('ELASTICSEARCH_USER');
-        $this->elasticsearchPassword = env('ELASTICSEARCH_PASSWORD');
+        $this->index = Index::create();
 
         parent::__construct();
     }
@@ -80,107 +61,51 @@ class ImportCustomerComplaints extends Command
         $throttle = $this->option('throttle');
         $production = $this->option('production');
 
-        if(!file_exists($filePath)) {
-            $this->error("File does not exist: {$filePath}");
-            return;
-        }
+        $reader = Csv\Reader::createFromPath($filePath);
+        $csv = $reader->fetch();
 
-        /**
-         * refactor todo:
-         *
-         * 1. get csv columns
-         * 2. convert column names to use underscores instead of spaces
-         * 3. verify these columns exist on the specified index?
-         * 4. for loop to create documents with column names as keys
-         * 5. for each key value pair, detect date types, convert it into specified date type
-         * 6. use the Elasticsearch/Index class to insert the document
-         */
-
-        $csvFile = new Csv\CsvFile($filePath);
-        $count = 0;
-
-        foreach($csvFile as $row) {
-            $this->log($row, $count);
-
-            try {
-                $this->index($row, $count, $production);
-            } catch (\Exception $e) {
-                echo $e->getMessage();
+        foreach($csv as $row) {
+            // skip header
+            if($csv->key() == 0) {
+                continue;
             }
 
-            $count++;
+            try {
+                $this->log($row, $csv->key());
+                $this->index($row, $production);
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
+            }
+
             usleep($throttle);
         }
     }
 
-    /**
-     * Index document to elasticsearch
-     *
-     * @param $row
-     * @param $count
-     * @param $production
-     */
-    protected function index($row, $count, $production)
+    protected function index($row, $production)
     {
-        if($count == 0) {
-            return;
-        }
-
         if(!$production) {
             return;
         }
 
-        $response = $this->client->request('POST', $this->elasticsearchApi . "/consumer_complaints/complaint", [
-            'auth' => [$this->elasticsearchUser, $this->elasticsearchPassword],
-            'json' => [
-                "date_received" => DateTime::createFromFormat('m/d/Y', $row[0])->format('Y-m-d'),
-                "product" => $row[1],
-                "sub_product" => $row[2],
-                "issue" => $row[3],
-                "sub_issue" => $row[4],
-                "consumer_complaint_narrative" => $row[5],
-                "company_public_response" => $row[6],
-                "company" => $row[7],
-                "state" => $row[8],
-                "zip" => $row[9],
-                "tags" => $row[10],
-                "consumer_consent_provided" => $row[11],
-                "submitted_via" => $row[12],
-                "date_sent_to_company" => DateTime::createFromFormat('m/d/Y', $row[13])->format('Y-m-d'),
-                "company_response_to_consumer" => $row[14],
-                "timely_response" => $row[15],
-                "consumer_disputed" => $row[16],
-                "complaint_id" => $row[17]
-            ]
-        ]);
+        $this->index->send($this->formatRow($row));
     }
 
-    /**
-     * log debug output to console
-     *
-     * @param $row
-     * @param $count
-     */
-    protected function log($row, $count)
+    protected function log($row, $key)
     {
-        echo "{$count}. ";
-        echo "date_received: {$row[0]} ";
-        echo "product: {$row[1]} ";
-        echo "sub_product: {$row[2]} ";
-        echo "issue: {$row[3]} ";
-        echo "sub_issue: {$row[4]} ";
-        echo "consumer_complaint_narrative: {$row[5]} ";
-        echo "company_public_response: {$row[6]} ";
-        echo "company: {$row[7]} ";
-        echo "state: {$row[8]} ";
-        echo "zip: {$row[9]} ";
-        echo "tags: {$row[10]} ";
-        echo "consumer_consent_provided: {$row[11]} ";
-        echo "submitted_via: {$row[12]} ";
-        echo "date_sent_to_company: {$row[13]} ";
-        echo "company_response_to_consumer: {$row[14]} ";
-        echo "timely_response: {$row[15]} ";
-        echo "consumer_disputed: {$row[16]} ";
-        echo "complaint_id: {$row[17]} \n";
+        $this->info("{$key}: " . implode(",", $row));
+    }
+
+    protected function formatRow($row)
+    {
+        $row = array_combine(Index::$fields, $row);
+
+        $row['date_received'] = DateTime::createFromFormat('m/d/Y', $row['date_received'])
+            ->format('Y-m-d');
+
+        $row['date_sent_to_company'] = DateTime::createFromFormat('m/d/Y', $row['date_sent_to_company'])
+            ->format('Y-m-d');
+
+
+        return $row;
     }
 }

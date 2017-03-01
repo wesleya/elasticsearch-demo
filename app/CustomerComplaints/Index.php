@@ -1,5 +1,5 @@
 <?php
-namespace App\Elasticsearch;
+namespace App\CustomerComplaints;
 
 use GuzzleHttp\Client;
 
@@ -33,6 +33,27 @@ class Index
      */
     protected $password;
 
+    public static $fields = [
+        "date_received",
+        "product",
+        "sub_product",
+        "issue",
+        "sub_issue",
+        "consumer_complaint_narrative",
+        "company_public_response",
+        "company",
+        "state",
+        "zip",
+        "tags",
+        "consumer_consent_provided",
+        "submitted_via",
+        "date_sent_to_company",
+        "company_response_to_consumer",
+        "timely_response",
+        "consumer_disputed",
+        "complaint_id"
+    ];
+
     /**
      * Elasticsearch constructor.
      *
@@ -62,11 +83,11 @@ class Index
         return new Index($client, $api, $user, $password);
     }
 
-    public function document($document)
+    public function send($document)
     {
         return $this->client->request(
             'POST',
-            "{$this->api}/consumer_complaints/complaint",
+            "{$this->api}/consumer_complaints/complaint_test/",
             ['auth' => [$this->user, $this->password], 'json' => $document]
         );
     }

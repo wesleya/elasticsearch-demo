@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Elasticsearch\Search;
+use App\CustomerComplaints\Search;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 

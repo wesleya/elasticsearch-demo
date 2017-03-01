@@ -81,6 +81,12 @@ class ImportCustomerComplaints extends Command
         }
     }
 
+    /**
+     * Index a document into Elasticsearch
+     *
+     * @param array $row
+     * @param bool $production
+     */
     protected function index($row, $production)
     {
         if(!$production) {
@@ -90,11 +96,23 @@ class ImportCustomerComplaints extends Command
         $this->index->send($this->formatRow($row));
     }
 
+    /**
+     * Log output
+     *
+     * @param array $row
+     * @param int $key
+     */
     protected function log($row, $key)
     {
         $this->info("{$key}: " . implode(",", $row));
     }
 
+    /**
+     * Format csv data into format Elasticsearch can understand
+     *
+     * @param array $row
+     * @return array
+     */
     protected function formatRow($row)
     {
         $row = array_combine(Index::$fields, $row);

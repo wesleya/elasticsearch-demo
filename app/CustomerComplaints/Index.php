@@ -33,6 +33,9 @@ class Index
      */
     protected $password;
 
+    /**
+     * @var array
+     */
     public static $fields = [
         "date_received",
         "product",
@@ -83,6 +86,12 @@ class Index
         return new Index($client, $api, $user, $password);
     }
 
+    /**
+     * Index a document into Elasticsearch
+     *
+     * @param array $document
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
     public function send($document)
     {
         return $this->client->request(

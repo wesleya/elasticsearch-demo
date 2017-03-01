@@ -81,11 +81,11 @@ class ApiSearchController extends Controller
     public function globalSearch(Request $request)
     {
         $terms = [
-            [ "match" => [ "product" => $request->input('search_term')] ],
-            [ "match" => [ "sub_product" => $request->input('search_term')] ],
-            [ "match" => [ "company" => $request->input('search_term')] ],
-            [ "match" => [ "issue" => $request->input('search_term')] ],
-            [ "match" => [ "sub_issue" => $request->input('search_term')] ]
+            $this->match('product', $request->input('search_term')),
+            $this->match('sub_product', $request->input('search_term')),
+            $this->match('company', $request->input('search_term')),
+            $this->match('issue', $request->input('search_term')),
+            $this->match('sub_issue', $request->input('search_term'))
         ];
 
         return $this->search(
@@ -104,8 +104,8 @@ class ApiSearchController extends Controller
     protected function productSearch(Request $request)
     {
         $terms = [
-            [ "match" => [ "product" => $request->input('search_term')] ],
-            [ "match" => [ "sub_product" => $request->input('search_term')] ]
+            $this->match('product', $request->input('search_term')),
+            $this->match('sub_product', $request->input('search_term')),
         ];
 
         return $this->search(
@@ -124,7 +124,7 @@ class ApiSearchController extends Controller
     protected function companySearch(Request $request)
     {
         $terms = [
-            [ "match" => [ "company" => $request->input('search_term')] ]
+            $this->match('company', $request->input('search_term'))
         ];
 
         return $this->search(
@@ -142,13 +142,13 @@ class ApiSearchController extends Controller
      */
     protected function issueSearch(Request $request)
     {
-        $terms = [
-            [ "match" => [ "issue" => $request->input('search_term')] ],
-            [ "match" => [ "sub_issue" => $request->input('search_term')] ],
+        $query = [
+            $this->match('issue', $request->input('search_term')),
+            $this->match('sub_issue', $request->input('search_term'))
         ];
 
         return $this->search(
-            $terms,
+            $query,
             $request->input('page'),
             $request->input('limit')
         );
@@ -157,12 +157,12 @@ class ApiSearchController extends Controller
     /**
      * Make api call to elastic search
      *
-     * @param array $terms
+     * @param array $query
      * @param int $page
      * @param int $limit
      * @return \GuzzleHttp\Psr7\Response
      */
-    protected function search($terms, $page, $limit)
+    protected function search($query, $page, $limit)
     {
         return $this->client->request('GET', "{$this->elasticApi}/consumer_complaints/complaint/_search", [
             'auth' => [$this->elasticUser, $this->elasticPassword],
@@ -171,10 +171,22 @@ class ApiSearchController extends Controller
                 "size" => $limit,
                 "query" => [
                     "bool" => [
-                        "should" => [$terms]
+                        "should" => [$query]
                     ]
                 ]
             ]
         ]);
+    }
+
+    protected function match($field, $value)
+    {
+        return [
+            "match" => [
+                $field => [
+                    "query" => $value,
+                    "analyzer" => "standard"
+                ]
+            ]
+        ];
     }
 }

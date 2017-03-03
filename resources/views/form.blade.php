@@ -1,4 +1,4 @@
-<form class="form" v-on:submit.prevent>
+<form class="form" v-on:submit.prevent="">
     <div class="row">
         <div class="col-xs-12 col-sm-4 col-md-3">
             <div class="input-group">
@@ -21,6 +21,7 @@
                        placeholder="Search Term e.g. loan, credit"
                        v-model="search_term"
                        v-on:keyup="loadNew"
+                       v-on:keyup.enter="$event.target.blur()"
                 >
             </div>
         </div>

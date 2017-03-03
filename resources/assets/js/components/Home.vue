@@ -8,7 +8,8 @@
                 page: 0,
                 limit: 10,
                 results: [],
-                detail: null
+                detail: null,
+                searching: false
             }
         },
 
@@ -21,33 +22,31 @@
             /**
              * load results for a new search
              */
-            loadNew: _.throttle(function() {
-                this.page = 0;
-                this.results = [];
+            loadNew: _.debounce(function() {
 
-                this.search();
-            }, 100),
+                if( this.emptySearch() ) {
+                    return this.clearResults();
+                }
+
+                this.searching = true;
+
+                axios.get("/api/v1/search/", this.getOptions()).then(
+                    this.loadNewCallback,
+                    this.errorCallback
+                );
+            }, 300),
 
             /**
              * load more results for an existing search
              */
             loadMore: function() {
+
+                this.searching = true;
                 this.page++;
 
-                this.search();
-            },
-
-            /**
-             * make the actual api call for new and load more searches
-             */
-            search: function () {
-                console.log("searching", this.search_category, this.search_term);
-
-                var options = this.getOptions();
-
-                axios.get("/api/v1/search/", options).then(
-                        this.successCallback,
-                        this.errorCallback
+                axios.get("/api/v1/search/", this.getOptions()).then(
+                    this.loadMoreCallback,
+                    this.errorCallback
                 );
             },
 
@@ -57,16 +56,35 @@
              *
              * @param response
              */
-            successCallback: function(response) {
-                console.log("api success: " + response.data);
+            loadMoreCallback: function(response) {
 
-                var results = this.results.concat(response.data);
+                let results = this.results.concat(response.data);
 
                 Vue.set(this, 'results', results);
+
+                this.searching = false;
+            },
+
+            /**
+             * once we get search results from the api, l
+             * oad them up so we can display them to the user
+             *
+             * @param response
+             */
+            loadNewCallback: function(response) {
+
+                Vue.set(this, 'results', response.data);
+
+                if( this.emptySearch() ) {
+                    this.clearResults();
+                }
+
+                this.searching = false;
             },
 
             errorCallback: function(response) {
                 console.log("error loading activity");
+                this.searching = false;
             },
 
             /**
@@ -97,6 +115,27 @@
                 this.detail = detail;
 
                 $('#detail-modal').modal('show');
+            },
+
+            clearResults: function() {
+                this.results = [];
+                this.page = 0;
+            },
+
+            emptySearch: function() {
+                return this.search_term.length == 0;
+            },
+
+            emptyResults: function() {
+                return this.results.length == 0;
+            },
+
+            noResults: function() {
+                return !this.emptySearch() && this.emptyResults() && !this.searching;
+            },
+
+            isSearching: function() {
+                return this.searching;
             }
         }
     }

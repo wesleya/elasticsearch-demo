@@ -2,6 +2,15 @@
 
 Demo to introduce myself to elastic search. Backend is Laravel, Frontend is Vue.
 
+### To Do
+
+* bug for too many results
+* feedback for no results
+* escape keyboard on enter
+* don't send request if empty search
+* add loading icon
+* validate input more carefully since the api is open to scraping (no csrf)
+
 ## Setup
 
 todo, explain exactly what we're going to setup. probably explain something about how i'm a developer and don't have a ton of experience with setting up the hardware, which is why I wanted to install on a server vs using the SASS. or maybe this should go in the project description.

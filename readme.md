@@ -1,37 +1,21 @@
 # Elasticsearch Demo
 
-Demo to introduce myself to elastic search. Backend is Laravel, Frontend is Vue.
-
-### To Do
-
-* bug for too many results
-* feedback for no results
-* escape keyboard on enter
-* don't send request if empty search
-* add loading icon
-* validate input more carefully since the api is open to scraping (no csrf)
+Demo to introduce myself to elastic search.
 
 ## Setup
 
-todo, explain exactly what we're going to setup. probably explain something about how i'm a developer and don't have a ton of experience with setting up the hardware, which is why I wanted to install on a server vs using the SASS. or maybe this should go in the project description.
+1. [Cloud Server Setup](#cloud-server-setup)
+2. [Elasticsearch and Kibana Installation](#elasticsearch-and-kibana-installation)
+3. [IPTables Setup](#iptables-setup)
+4. [Nginx Config](#nginx-config)
+5. [DNS Setup](#dns-setup)
 
-* cloud server
-* nginx config
-* iptables
-* dns
-* elasticsearch and kibana
-* demo site
 
-### Prerequisites
+### Cloud Server Setup
 
-* Linode Server with 4GB Memory - This will run you ~$20/month. But it's the cheapest server I can find that comes with 4GB memory. I wasn't able to get Elasticsearch running with anything less.
-* Domain Name - This is optional, but my setup steps include how to setup different subdomains for Elasticsearch, Kibana, and a demo site. About ~20/month.
+I decided to set up my Elasticsearch instance on a Linode server, but these instructions should work on any Ubuntu Linux machine. If you do decide to go the cloud server route, I was only able to get Elasticsearch running on a 4GB Memory instance at a minimum, about $20 on Linode.
 
-### Linode Server
-
-todo: summary of this first step
-
-1. SSH into your new Linode server and install a few basic packages we'll need:
+1. SSH into your new Linode server and install a few basic packages we'll need during setup:
 ```
 //ssh in as root
 $ ssh root@45.79.89.118
@@ -41,13 +25,16 @@ $ apt-get upgrade
 $ apt-get install git
 $ apt-get install vim
 $ apt-get install tmux
+```
 
-// install java (based on this)
+2. Elasticsearch requires Java, [install it](https://www.digitalocean.com/community/tutorials/how-to-install-java-on-ubuntu-with-apt-get)
+
+```
 $ java -version
 $ apt-get install default-jre
 ```
 
-2. Create new user. Elasticsearch won't let you run it under root user, so let's create a new user to install and run Elasticsearch under:
+2. Elasticsearch won't let you run it under root user, so let's [create a new user](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04) to install and run Elasticsearch:
 ```
 // add new user
 $ adduser elastic
@@ -76,7 +63,7 @@ $ chmod 600 .ssh/authorized_keys
 $ exit
 ```
 
-4. Install bash-it. This step is completely optional, I use bash-it to customize my shell:
+4. Install [bash-it](https://github.com/Bash-it/bash-it). This step is completely optional, I use bash-it to customize my shell:
 ```
 // clone the repo
 $ git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
@@ -88,9 +75,9 @@ $ ~/.bash_it/install.sh
 $ source ~/.bashrc
 ```
 
-###Install Elastic Search Services
+### Elasticsearch and Kibana Installation
 
-1. Install Elasticsearch:
+1. Install Elasticsearch ([full instructions](https://www.elastic.co/guide/en/elasticsearch/reference/5.1/zip-targz.html#install-targz)):
 
 ```
 $ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.tar.gz
@@ -99,7 +86,7 @@ $ tar -xzf elasticsearch-5.1.2.tar.gz
 $ rm elasticsearch-5.1.2.tar.gz
 ```
 
-2. Install Kibana (based on this):
+2. Install Kibana ([full instructions](https://www.elastic.co/guide/en/kibana/current/targz.html#targz)):
 
 ```
 $ wget https://artifacts.elastic.co/downloads/kibana/kibana-5.1.2-linux-x86_64.tar.gz
@@ -108,9 +95,20 @@ $tar -xzf kibana-5.1.2-linux-x86_64.tar.gz
 $ rm kibana-5.1.2-linux-x86_64.tar.gz
 ```
 
-3. tmux some windows so we can run these services (later on I'll have to figure out how to run these as actual monitored services). Create one window to run elasticsearch, another window to run kibana, and another window to be able to edit configs
+3. Use tmux to create some new terminals we're going to use to run the Elasticsearch and Kibana services
 
-4. install x-pack
+```
+// start tmux
+$ tmux
+
+// create a new window
+ctrl + b, c
+
+// toggle between you're two tmux windows
+ctrl + b, n
+```
+
+4. Install x-pack
 
 ```
 // install x-pack plugin for elastic search
@@ -132,7 +130,7 @@ $ kibana-5.1.2-linux-x86_64/bin/kibana
 // the output from these commands won't return to command line (reason for the separate windows).
 ```
 
-### Setup IP Tables
+### IPTables Setup
 
 1. Add IP Table Rules:
 
@@ -149,10 +147,6 @@ $ sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 $ sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 // all https connections
 $ sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-
-// todo: add this after the port number in order to make it ip specific: -s XXX.XXX.XXX.XXX
-// use my work ip address for kibana
-// use the forge server ip address for elasticsearch
 
 // allow loopback for local host
 $ sudo iptables -I INPUT 1 -i lo -j ACCEPT
@@ -175,8 +169,7 @@ $ sudo apt-get install iptables-persistent
 $ sudo invoke-rc.d iptables-persistent save
 ```
 
-
-### Setup Nginx 
+### Nginx Config
 
 Install nginx using the instructions here
 - get rid of the default server config

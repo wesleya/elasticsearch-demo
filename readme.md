@@ -1,15 +1,13 @@
 # Elasticsearch Demo
 
-Demo to introduce myself to elastic search.
-
-## Setup
+Demo to introduce myself to elastic search. Following are the steps I used to setup this demo project.
 
 1. [Cloud Server Setup](#cloud-server-setup)
 2. [Elasticsearch and Kibana Installation](#elasticsearch-and-kibana-installation)
 3. [IPTables Setup](#iptables-setup)
 4. [Nginx Config](#nginx-config)
 5. [DNS Setup](#dns-setup)
-
+6. [Install HTTPS Certificates](#install-https-certificates)
 
 ### Cloud Server Setup
 
@@ -28,13 +26,12 @@ $ apt-get install tmux
 ```
 
 2. Elasticsearch requires Java, [install it](https://www.digitalocean.com/community/tutorials/how-to-install-java-on-ubuntu-with-apt-get)
-
 ```
 $ java -version
 $ apt-get install default-jre
 ```
 
-2. Elasticsearch won't let you run it under root user, so let's [create a new user](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04) to install and run Elasticsearch:
+3. Elasticsearch won't let you run it under root user, so let's [create a new user](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04) to install and run Elasticsearch:
 ```
 // add new user
 $ adduser elastic
@@ -43,7 +40,7 @@ $ adduser elastic
 $ gpasswd -a elastic sudo
 ```
 
-3. Add public key for new user:
+4. Add public key for new user:
 ```
 // on my local machine, copy my public key
 $ cat ~/.ssh/id_rsa.pub
@@ -63,7 +60,7 @@ $ chmod 600 .ssh/authorized_keys
 $ exit
 ```
 
-4. Install [bash-it](https://github.com/Bash-it/bash-it). This step is completely optional, I use bash-it to customize my shell:
+5. Install [bash-it](https://github.com/Bash-it/bash-it). This step is completely optional, I use bash-it to customize my shell:
 ```
 // clone the repo
 $ git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
@@ -78,7 +75,6 @@ $ source ~/.bashrc
 ### Elasticsearch and Kibana Installation
 
 1. Install Elasticsearch ([full instructions](https://www.elastic.co/guide/en/elasticsearch/reference/5.1/zip-targz.html#install-targz)):
-
 ```
 $ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.2.tar.gz
 $ sha1sum elasticsearch-5.1.2.tar.gz
@@ -87,7 +83,6 @@ $ rm elasticsearch-5.1.2.tar.gz
 ```
 
 2. Install Kibana ([full instructions](https://www.elastic.co/guide/en/kibana/current/targz.html#targz)):
-
 ```
 $ wget https://artifacts.elastic.co/downloads/kibana/kibana-5.1.2-linux-x86_64.tar.gz
 $ sha1sum kibana-5.1.2-linux-x86_64.tar.gz
@@ -96,7 +91,6 @@ $ rm kibana-5.1.2-linux-x86_64.tar.gz
 ```
 
 3. Use tmux to create some new terminals we're going to use to run the Elasticsearch and Kibana services
-
 ```
 // start tmux
 $ tmux
@@ -109,7 +103,6 @@ ctrl + b, n
 ```
 
 4. Install x-pack
-
 ```
 // install x-pack plugin for elastic search
 $ bin/elasticsearch-plugin install x-pack
@@ -133,7 +126,6 @@ $ kibana-5.1.2-linux-x86_64/bin/kibana
 ### IPTables Setup
 
 1. Add IP Table Rules:
-
 ```
 // check current rules
 $ sudo iptables -S
@@ -159,7 +151,6 @@ sudo iptables -A INPUT -j DROP
 ```
 
 2. Save IP rules so they persist on restart
-
 ```
 // install the iptables-persistent package
 $ sudo apt-get update
@@ -186,7 +177,6 @@ deb-src http://nginx.org/packages/ubuntu/ trusty nginx
 ```
 
 2. now update your packages
-
 ```
 // Download and add the nginx signature key using the command below:
 $ wget http://nginx.org/keys/nginx_signing.key
@@ -200,7 +190,6 @@ rm nginx_signing.key
 ```
 
 3. Now that the package list is updated and indexed, you can install Nginx:
-
 ```
 // install Nginx
 $ sudo apt-get install nginx
@@ -213,14 +202,11 @@ $ sudo service nginx start
 ```
 
 4. Get rid of the default Nginx config, we're going to use a custom setup
-
 ```
 $ mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.default.backup
 ```
 
-
 5. Add custom server configs for Kibana
-
 ```
 // create the new config file
 $ sudo vim etc/nginx/conf.d/kibana.conf
@@ -242,7 +228,6 @@ server {
 ```
 
 6. Add custom server configs for Elasticsearch
-
 ```
 $ sudo vim conf.d/elastic.conf
 
@@ -263,19 +248,15 @@ server {
 ```
 
 7. Restart Nginx
-
 ```
 $ sudo service nginx restart
 ```
 
 8. Now you should be ready to access your newly setup Elasticsearch and Kibana instances. You should probably login and change the default username and password
-
 ```
 user: elastic
 pass: changeme
 ```
-
-// now change the default credentials
 
 ### Install HTTPS Certificates
 

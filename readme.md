@@ -13,7 +13,7 @@ Demo to introduce myself to elastic search.
 
 ### Cloud Server Setup
 
-I decided to set up my Elasticsearch instance on a Linode server, but these instructions should work on any Ubuntu Linux machine. If you do decide to go the cloud server route, I was only able to get Elasticsearch running on a 4GB Memory instance at a minimum, about $20 on Linode.
+I decided to set up my Elasticsearch instance on a Linode server, but these instructions should work on any Ubuntu Linux machine. If you do decide to go the cloud server route, I was only able to get Elasticsearch running on a 4GB Memory instance at a minimum, about $20 on Linode. This first stage of setup is just installing a few pre-requisites we'll use for the rest of setup.
 
 1. SSH into your new Linode server and install a few basic packages we'll need during setup:
 ```
@@ -171,14 +171,61 @@ $ sudo invoke-rc.d iptables-persistent save
 
 ### Nginx Config
 
-Install nginx using the instructions here
-- get rid of the default server config
+Elasticsearch runs on localhost:9200 by default, and Kibana runs on localhost:5601 by default. We'll use Nginx as a reverse proxy so that we can reach both services through http requests. For example, we'll setup http://kibana.my-project.com to hit the Kibana service, and elastic.my-project.com to hit the Elasticsearch Service.
 
+1. Add nginx repository
+```
+// open the sources.list file using the command
+sudo vim /etc/apt/sources.list
+
+// You can add the Nginx repository links at the bottom of the file. Scroll down to the very bottom of the file and add the two lines below :
+deb http://nginx.org/packages/ubuntu/ trusty nginx
+deb-src http://nginx.org/packages/ubuntu/ trusty nginx
+
+// save the file
+```
+
+2. now update your packages
+
+```
+// Download and add the nginx signature key using the command below:
+$ wget http://nginx.org/keys/nginx_signing.key
+$ sudo apt-key add nginx_signing.key
+
+// update packages
+$ sudo apt-get update
+
+// then remove the key file from your home directory
+rm nginx_signing.key
+```
+
+3. Now that the package list is updated and indexed, you can install Nginx:
+
+```
+// install Nginx
+$ sudo apt-get install nginx
+
+// verify Nginx installed the version:
+$ nginx –v
+
+// need to start service
+$ sudo service nginx start
+```
+
+4. Get rid of the default Nginx config, we're going to use a custom setup
+
+```
 $ mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.default.backup
+```
 
-- Add custom server configs for kibana and elastic search
 
-// etc/nginx/conf.d/kibana.conf
+5. Add custom server configs for Kibana
+
+```
+// create the new config file
+$ sudo vim etc/nginx/conf.d/kibana.conf
+
+// any request to kibana.elastic-search.io will be forwarded to the kibana service running on http://localhost:5601
 server {
   listen 80;
   server_name kibana.elastic-search.io;
@@ -192,8 +239,14 @@ server {
   proxy_cache_bypass $http_upgrade;
   }
 }
+```
 
-// conf.d/elastic.conf
+6. Add custom server configs for Elasticsearch
+
+```
+$ sudo vim conf.d/elastic.conf
+
+// any request to api.elastic-search.io will be forwarded to the Elasticsearch service running on http://localhost:9200
 server {
   listen 80;
   api.elastic-search.io;
@@ -207,16 +260,20 @@ server {
   proxy_cache_bypass $http_upgrade;
   }
 }
+```
 
-- Restart Nginx
+7. Restart Nginx
 
+```
 $ sudo service nginx restart
+```
 
-- Login to Kibana
+8. Now you should be ready to access your newly setup Elasticsearch and Kibana instances. You should probably login and change the default username and password
 
-// now loging with the default credentials
+```
 user: elastic
 pass: changeme
+```
 
 // now change the default credentials
 

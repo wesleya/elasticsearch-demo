@@ -24,13 +24,11 @@ $ apt-get install git
 $ apt-get install vim
 $ apt-get install tmux
 ```
-
 2. Elasticsearch requires Java, [install it](https://www.digitalocean.com/community/tutorials/how-to-install-java-on-ubuntu-with-apt-get)
 ```
 $ java -version
 $ apt-get install default-jre
 ```
-
 3. Elasticsearch won't let you run it under root user, so let's [create a new user](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-14-04) to install and run Elasticsearch:
 ```
 // add new user
@@ -39,7 +37,6 @@ $ adduser elastic
 // move new user to sudo group so we can do admin stuff
 $ gpasswd -a elastic sudo
 ```
-
 4. Add public key for new user:
 ```
 // on my local machine, copy my public key
@@ -59,7 +56,6 @@ $ chmod 600 .ssh/authorized_keys
 // exit back to root user
 $ exit
 ```
-
 5. Install [bash-it](https://github.com/Bash-it/bash-it). This step is completely optional, I use bash-it to customize my shell:
 ```
 // clone the repo
@@ -81,7 +77,6 @@ $ sha1sum elasticsearch-5.1.2.tar.gz
 $ tar -xzf elasticsearch-5.1.2.tar.gz
 $ rm elasticsearch-5.1.2.tar.gz
 ```
-
 2. Install Kibana ([full instructions](https://www.elastic.co/guide/en/kibana/current/targz.html#targz)):
 ```
 $ wget https://artifacts.elastic.co/downloads/kibana/kibana-5.1.2-linux-x86_64.tar.gz
@@ -89,7 +84,6 @@ $ sha1sum kibana-5.1.2-linux-x86_64.tar.gz
 $tar -xzf kibana-5.1.2-linux-x86_64.tar.gz
 $ rm kibana-5.1.2-linux-x86_64.tar.gz
 ```
-
 3. Use tmux to create some new terminals we're going to use to run the Elasticsearch and Kibana services
 ```
 // start tmux
@@ -101,7 +95,6 @@ ctrl + b, c
 // toggle between you're two tmux windows
 ctrl + b, n
 ```
-
 4. Install x-pack
 ```
 // install x-pack plugin for elastic search
@@ -149,7 +142,6 @@ $ sudo iptables -P INPUT ACCEPT
 // drop everything else
 sudo iptables -A INPUT -j DROP
 ```
-
 2. Save IP rules so they persist on restart
 ```
 // install the iptables-persistent package
@@ -175,7 +167,6 @@ deb-src http://nginx.org/packages/ubuntu/ trusty nginx
 
 // save the file
 ```
-
 2. now update your packages
 ```
 // Download and add the nginx signature key using the command below:
@@ -188,7 +179,6 @@ $ sudo apt-get update
 // then remove the key file from your home directory
 rm nginx_signing.key
 ```
-
 3. Now that the package list is updated and indexed, you can install Nginx:
 ```
 // install Nginx
@@ -200,12 +190,10 @@ $ nginx –v
 // need to start service
 $ sudo service nginx start
 ```
-
 4. Get rid of the default Nginx config, we're going to use a custom setup
 ```
 $ mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.default.backup
 ```
-
 5. Add custom server configs for Kibana
 ```
 // create the new config file
@@ -226,7 +214,6 @@ server {
   }
 }
 ```
-
 6. Add custom server configs for Elasticsearch
 ```
 $ sudo vim conf.d/elastic.conf
@@ -246,12 +233,10 @@ server {
   }
 }
 ```
-
 7. Restart Nginx
 ```
 $ sudo service nginx restart
 ```
-
 8. Now you should be ready to access your newly setup Elasticsearch and Kibana instances. You should probably login and change the default username and password
 ```
 user: elastic

@@ -16,18 +16,6 @@ class ApiSearchController extends Controller
     protected $search;
 
     /**
-     * Valid search types
-     *
-     * @var array
-     */
-    protected static $searchTypes = [
-        'product',
-        'company',
-        'issue',
-        'general'
-    ];
-
-    /**
      * ApiSearchController constructor.
      */
     public function __construct()
@@ -44,14 +32,11 @@ class ApiSearchController extends Controller
     {
         $this->validate($request, $this->rules());
 
-        $method = $request->input('search_method');
         $term = $request->input('search_term');
         $page = $request->input('page');
         $limit = $request->input('limit');
 
-        $response = $this->search->$method($term, $page, $limit);
-
-        return $response;
+        return $this->search->general($term, $page, $limit);
     }
 
     /**
@@ -62,10 +47,6 @@ class ApiSearchController extends Controller
     protected function rules()
     {
         return [
-            'search_method' => [
-                'required',
-                Rule::in(self::$searchTypes),
-            ],
             'search_term' => 'required',
             'page' => ['required', 'integer'],
             'limit' => ['required', 'integer']

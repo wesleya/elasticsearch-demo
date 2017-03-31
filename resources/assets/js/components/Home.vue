@@ -3,7 +3,6 @@
 
         data(){
             return{
-                search_category: 'product',
                 search_term: '',
                 page: 0,
                 limit: 10,
@@ -95,7 +94,6 @@
             getOptions: function() {
                 return {
                     params: {
-                        search_method: this.search_category,
                         search_term: this.search_term,
                         page: this.page,
                         limit: this.limit

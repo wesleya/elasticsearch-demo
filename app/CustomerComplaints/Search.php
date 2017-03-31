@@ -63,59 +63,6 @@ class Search
     }
 
     /**
-     * Search by company
-     *
-     * @param string $term the search term
-     * @param int $page
-     * @param int $limit
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    public function company($term, $page, $limit)
-    {
-        $query = [
-            $this->match('company', $term)
-        ];
-
-        return $this->search($query, $page, $limit);
-    }
-
-    /**
-     * Search by issue
-     *
-     * @param string $term the search term
-     * @param int $page
-     * @param int $limit
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    public function issue($term, $page, $limit)
-    {
-        $query = [
-            $this->match('issue', $term),
-            $this->match('sub_issue', $term)
-        ];
-
-        return $this->search($query, $page, $limit);
-    }
-
-    /**
-     * Search by product
-     *
-     * @param string $term the search term
-     * @param int $page
-     * @param int $limit
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    public function product($term, $page, $limit)
-    {
-        $query = [
-            $this->match('product', $term),
-            $this->match('sub_product', $term),
-        ];
-
-        return $this->search($query, $page, $limit);
-    }
-
-    /**
      * Search by general (global search)
      *
      * @param string $term the search term

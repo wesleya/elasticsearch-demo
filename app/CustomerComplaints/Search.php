@@ -155,6 +155,14 @@ class Search
                     "bool" => [
                         "should" => [$query]
                     ]
+                ],
+                "highlight" => [
+                    "fields" => [
+                        "issue" => new \stdClass(),
+                        "product" => new \stdClass(),
+                        "company" => new \stdClass()
+                    ],
+                    'require_field_match' => false
                 ]
             ]
         ]);

@@ -49,7 +49,9 @@ class ApiSearchController extends Controller
         $page = $request->input('page');
         $limit = $request->input('limit');
 
-        return $this->search->$method($term, $page, $limit);
+        $response = $this->search->$method($term, $page, $limit);
+
+        return $response;
     }
 
     /**

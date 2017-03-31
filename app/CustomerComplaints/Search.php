@@ -159,7 +159,9 @@ class Search
                 "highlight" => [
                     "fields" => [
                         "issue" => new \stdClass(),
+                        "sub_issue" => new \stdClass(),
                         "product" => new \stdClass(),
+                        "sub_product" => new \stdClass(),
                         "company" => new \stdClass()
                     ],
                     'require_field_match' => false

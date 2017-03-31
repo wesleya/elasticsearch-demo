@@ -8539,4 +8539,9 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
   display: none;
 }
 
+.complaint-card em {
+  background-color: lightcyan;
+  font-style: inherit;
+}
+
 /*# sourceMappingURL=app.css.map */

@@ -25,8 +25,7 @@ class ApiSearchController extends Controller
 
     /**
      * @param Request $request
-     *
-     * @return array
+     * @return \GuzzleHttp\Psr7\Response
      */
     public function index(Request $request)
     {

@@ -112,11 +112,6 @@ class Search
                         "company" => new \stdClass()
                     ],
                     'require_field_match' => false
-                ],
-                "filter" => [
-                    "script" => [
-                        "inline" => "doc['consumer_complaint_narrative'].length > 0"
-                    ]
                 ]
             ]
         ]);

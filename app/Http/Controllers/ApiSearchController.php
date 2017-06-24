@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Complaint;
 use App\CustomerComplaints\Search;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -35,7 +36,11 @@ class ApiSearchController extends Controller
         $page = $request->input('page');
         $limit = $request->input('limit');
 
-        return $this->search->general($term, $page, $limit);
+        // return $this->search->general($term, $page, $limit);
+        return Complaint::where('company', 'like', "%{$term}%")
+            ->offset(($page + 1) * $limit)
+            ->take($limit)
+            ->get();
     }
 
     /**

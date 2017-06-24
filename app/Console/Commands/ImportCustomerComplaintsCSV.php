@@ -14,14 +14,14 @@ use DateTime;
  *
  * @package App\Console\Commands
  */
-class ImportCustomerComplaints extends Command
+class ImportCustomerComplaintsCSV extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'complaints:import {file : relative patch to csv file from /storage directory}
+    protected $signature = 'import-complaints:csv {file : relative patch to csv file from /storage directory}
                                               {--throttle=300000 : microseconds to throttle between each document. default 300000.}  
                                               {--production} : send data to elasticsearch instance. dry run otherwise.';
 

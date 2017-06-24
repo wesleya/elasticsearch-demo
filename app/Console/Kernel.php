@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\ImportCustomerComplaints::class
+        Commands\ImportCustomerComplaintsCSV::class,
+        Commands\ImportCustomerComplaintsAPI::class
     ];
 
     /**

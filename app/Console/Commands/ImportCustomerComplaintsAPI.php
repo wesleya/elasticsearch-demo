@@ -22,7 +22,7 @@ class ImportCustomerComplaintsAPI extends Command
      * @var string
      */
     protected $signature = 'import-complaints:api
-        {--throttle=200000 : microseconds to throttle between each document. default 300000.}
+        {--throttle=1000 : microseconds to throttle between each document. default 1000.}
         {--limit=100 : max number of records to import. default 100.}
         {--production} : send data to elasticsearch instance. dry run otherwise.
         ';
@@ -53,41 +53,32 @@ class ImportCustomerComplaintsAPI extends Command
      */
     public function handle()
     {
-        $count = 0;
-        $complaints = $this->getComplaints();
-        $continue = count($complaints);
+        $this->info("querying for complaints...");
+        $complaints = $this->getComplaints($this->option('limit'));
+        $progress = $this->output->createProgressBar(count($complaints));
 
-        while($continue)
-        {
-            foreach($complaints as $complaint) {
-                try {
-                    $complaint = $this->formatComplaint($complaint);
-                    $this->create($complaint);
-                } catch (\Exception $e) {
-                    $this->error($e->getMessage());
-                }
-
-                $count++;
-
-                if($count >= (int)$this->option('limit')) {
-                    $continue = false;
-                    break;
-                }
-
-                usleep($this->option('throttle'));
+        foreach($complaints as $complaint) {
+            try {
+                $complaint = $this->formatComplaint($complaint);
+                $this->create($complaint);
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
             }
 
-            $this->info($count);
-            $complaints = $this->getComplaints();
+            $progress->advance();
+            usleep($this->option('throttle'));
         }
+
+        $progress->finish();
+        $this->info("completed!");
     }
 
-    protected function getComplaints()
+    protected function getComplaints($limit)
     {
         $lastComplaintId = Complaint::max('complaint_id');
 
         $query = [
-            '$limit' => '10',
+            '$limit' => $limit,
             '$order' => 'complaint_id ASC'
         ];
 
@@ -112,7 +103,7 @@ class ImportCustomerComplaintsAPI extends Command
     protected function create($complaint)
     {
         if(!$this->option('production')) {
-            return $this->info(json_decode($complaint));
+            return $this->info(implode(' : ', $complaint));
         }
 
         return Complaint::create($complaint);
@@ -133,6 +124,10 @@ class ImportCustomerComplaintsAPI extends Command
 
         $complaint['date_sent_to_company'] = DateTime::createFromFormat('Y-m-d\TH:i:s.000', $complaint['date_sent_to_company'])
             ->format('Y-m-d');
+
+        if( !empty($complaint['complaint_what_happened']) ) {
+            $complaint['complaint_what_happened_count'] = strlen($complaint['complaint_what_happened']);
+        }
 
         return $complaint;
     }

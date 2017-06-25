@@ -5,8 +5,8 @@
         <div class="container">
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent; margin-bottom: 0px;">
-                <h2 class="display-4">Elasticsearch Demo</h2>
-                <p class="lead">Just a simple demo to intro to Elasticsearch.</p>
+                <h2 class="display-4">Consumer Finance Complaints</h2>
+                <p class="lead">some kind of description.</p>
             </div>
 
             {{-- form for searching through resluts --}}

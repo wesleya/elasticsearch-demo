@@ -33,6 +33,7 @@ class CreateComplaintsTable extends Migration
             $table->string('timely')->nullable();
             $table->string('consumer_disputed')->nullable();
             $table->integer('complaint_id')->unique();
+            $table->integer('complaint_what_happened_count')->nullable();
             $table->timestamps();
         });
     }

@@ -22,9 +22,10 @@
              * load results for a new search
              */
             loadNew: _.debounce(function() {
+                this.clearResults();
 
                 if( this.emptySearch() ) {
-                    return this.clearResults();
+                    return
                 }
 
                 this.searching = true;

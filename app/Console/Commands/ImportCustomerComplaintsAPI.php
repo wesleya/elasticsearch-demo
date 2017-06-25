@@ -83,7 +83,7 @@ class ImportCustomerComplaintsAPI extends Command
         ];
 
         if($lastComplaintId) {
-            $query['$where'] = "complaint_id>{$lastComplaintId}";
+            $query['$where'] = "complaint_id>{$lastComplaintId} AND complaint_what_happened IS NOT NULL";
         }
 
         $res = $this->client->request('GET', 'https://data.consumerfinance.gov/resource/jhzv-w97w.json', [
@@ -126,7 +126,7 @@ class ImportCustomerComplaintsAPI extends Command
             ->format('Y-m-d');
 
         if( !empty($complaint['complaint_what_happened']) ) {
-            $complaint['complaint_what_happened_count'] = strlen($complaint['complaint_what_happened']);
+            $complaint['what_happened_count'] = strlen($complaint['complaint_what_happened']);
         }
 
         return $complaint;

@@ -25,5 +25,6 @@ class Complaint extends Model
         'timely',
         'consumer_disputed',
         'complaint_id',
+        'what_happened_count'
     ];
 }

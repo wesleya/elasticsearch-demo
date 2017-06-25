@@ -35,10 +35,10 @@ class ApiSearchController extends Controller
         $term = $request->input('search_term');
         $page = $request->input('page');
         $limit = $request->input('limit');
+        $offset = empty($page) ? 0 : ($page + 1) * $limit;
 
-        // return $this->search->general($term, $page, $limit);
         return Complaint::where('company', 'like', "%{$term}%")
-            ->offset(($page + 1) * $limit)
+            ->offset($offset)
             ->take($limit)
             ->get();
     }

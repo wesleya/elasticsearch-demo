@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Complaint;
 use App\CustomerComplaints\Search;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class ApiSearchController extends Controller
 {
@@ -37,9 +36,11 @@ class ApiSearchController extends Controller
         $limit = $request->input('limit');
         $offset = empty($page) ? 0 : ($page + 1) * $limit;
 
-        return Complaint::where('company', 'like', "%{$term}%")
+        return  Complaint::where('company', 'like', "%{$term}%")
             ->offset($offset)
             ->take($limit)
+            ->orderByRaw('complaint_what_happened IS NOT NULL')
+            ->orderBy('date_received', 'DESC')
             ->get();
     }
 

@@ -16,13 +16,13 @@ class CreateComplaintsTable extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->increments('id');
             $table->dateTime('date_received');
-            $table->string('product')->nullable();
+            $table->string('product')->nullable()->index();
             $table->string('sub_product')->nullable();
             $table->string('issue')->nullable();
             $table->string('sub_issue')->nullable();
             $table->text('complaint_what_happened')->nullable();
             $table->text('company_public_response')->nullable();
-            $table->string('company')->nullable();
+            $table->string('company')->nullable()->index();
             $table->string('state')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('tags')->nullable();

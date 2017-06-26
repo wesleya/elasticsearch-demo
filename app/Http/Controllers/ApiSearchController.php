@@ -39,7 +39,7 @@ class ApiSearchController extends Controller
         return  Complaint::where('company', 'like', "%{$term}%")
             ->offset($offset)
             ->take($limit)
-            ->orderByRaw('complaint_what_happened IS NOT NULL')
+            ->orderByRaw('complaint_what_happened IS NOT NULL DESC')
             ->orderBy('date_received', 'DESC')
             ->get();
     }

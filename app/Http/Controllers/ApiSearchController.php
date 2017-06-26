@@ -36,7 +36,17 @@ class ApiSearchController extends Controller
         $limit = $request->input('limit');
         $offset = empty($page) ? 0 : ($page + 1) * $limit;
 
-        return  Complaint::where('company', 'like', "%{$term}%")
+        return  Complaint::select('date_received',
+                'product',
+                'sub_product',
+                'issue',
+                'sub_issue',
+                'complaint_what_happened',
+                'company_public_response',
+                'company',
+                'company_response'
+            )
+            ->where('company', 'like', "%{$term}%")
             ->offset($offset)
             ->take($limit)
             ->orderByRaw('complaint_what_happened IS NOT NULL DESC')

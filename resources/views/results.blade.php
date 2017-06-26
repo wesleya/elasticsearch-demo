@@ -1,4 +1,7 @@
 <div class="list-group">
+
+    <br/>
+
     <div v-for="result in results">
         @include('complaint')
     </div>
@@ -16,16 +19,15 @@
         </div>
     </div>
 
-    <br/>
+    <div  v-if="results.length && !isSearching()" v-cloak>
+        <br/>
+        <button type="button"
+                class="btn btn-primary btn-lg btn-block"
+                v-on:click="loadMore"
+        >
+            Load More
+        </button>
 
-    <button type="button"
-            class="btn btn-primary btn-lg btn-block"
-            v-if="results.length && !isSearching()"
-            v-on:click="loadMore"
-            v-cloak
-    >
-        Load More
-    </button>
-
-    <br/>
+        <br/>
+    </div>
 </div>

@@ -6,7 +6,7 @@
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent; margin-bottom: 0px;">
                 <h2 class="display-4">Consumer Finance Complaints</h2>
-                <p class="lead">some kind of description.</p>
+                <p class="lead">Search through our collection of complaints against various financial service companies.</p>
             </div>
 
             {{-- form for searching through resluts --}}

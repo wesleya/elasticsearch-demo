@@ -1,7 +1,5 @@
 <div class="list-group">
 
-    <br/>
-
     <div v-for="result in results">
         @include('complaint')
     </div>

@@ -87,7 +87,7 @@ class ImportCustomerComplaintsAPI extends Command
         }
 
         $res = $this->client->request('GET', 'https://data.consumerfinance.gov/resource/jhzv-w97w.json', [
-            'headers' => ['X-App-Token' => 'wVqw2fpuDbgdCDKEbDCRt406J'],
+            'headers' => ['X-App-Token' => env('CFPB_APP_TOKEN')],
             'query' => $query
         ]);
 

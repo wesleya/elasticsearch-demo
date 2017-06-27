@@ -3,26 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Complaint;
-use App\CustomerComplaints\Search;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApiSearchController extends Controller
 {
-    /**
-     * Elasticsearch search helper
-     *
-     * @var Search
-     */
-    protected $search;
-
-    /**
-     * ApiSearchController constructor.
-     */
-    public function __construct()
-    {
-        $this->search = Search::create();
-    }
-
     /**
      * @param Request $request
      * @return \GuzzleHttp\Psr7\Response
@@ -36,8 +21,7 @@ class ApiSearchController extends Controller
         $limit = $request->input('limit');
         $offset = empty($page) ? 0 : ($page + 1) * $limit;
 
-        return  Complaint::select('date_received',
-                'product',
+        return  Complaint::select('product',
                 'sub_product',
                 'issue',
                 'sub_issue',
@@ -46,6 +30,7 @@ class ApiSearchController extends Controller
                 'company',
                 'company_response'
             )
+            ->addSelect(DB::raw('DATE(date_received) as date_received'))
             ->where('company', 'like', "%{$term}%")
             ->offset($offset)
             ->take($limit)

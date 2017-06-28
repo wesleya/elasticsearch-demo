@@ -1,4 +1,4 @@
-<form class="form" v-on:submit.prevent="">
+<form class="form" v-on:submit.prevent="loadNew">
     <div class="form-group">
         <div class="input-group input-group-lg">
             <span class="input-group-addon">
@@ -8,7 +8,6 @@
                    type="text"
                    placeholder="Company"
                    v-model="search_term"
-                   v-on:keyup="loadNew"
                    v-on:keyup.enter="$event.target.blur()"
             >
         </div>

@@ -8,7 +8,8 @@
                 limit: 10,
                 results: [],
                 detail: null,
-                searching: false
+                searching: false,
+                search_submitted: false
             }
         },
 
@@ -29,6 +30,7 @@
                 }
 
                 this.searching = true;
+                this.search_submitted = true;
 
                 axios.get("/api/v1/search/", this.getOptions()).then(
                     this.loadNewCallback,
@@ -130,7 +132,7 @@
             },
 
             noResults: function() {
-                return !this.emptySearch() && this.emptyResults() && !this.searching;
+                return !this.emptySearch() && this.emptyResults() && !this.searching && this.search_submitted;
             },
 
             isSearching: function() {

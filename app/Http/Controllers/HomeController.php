@@ -25,9 +25,9 @@ class HomeController
     protected function getComplaint($company)
     {
         return Complaint::select('complaint_what_happened')
-            ->whereNotNull('complaint_what_happened')
+            ->whereNotNull('what_happened_count')
             ->where('company', $company)
             ->orderBy('date_received', 'DESC')
-            ->value('complaint_what_happened');
+            ->value('what_happened_count');
     }
 }

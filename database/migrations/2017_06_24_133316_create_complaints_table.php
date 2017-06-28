@@ -20,7 +20,7 @@ class CreateComplaintsTable extends Migration
             $table->string('sub_product')->nullable();
             $table->string('issue')->nullable();
             $table->string('sub_issue')->nullable();
-            $table->text('complaint_what_happened')->nullable()->index();
+            $table->text('complaint_what_happened')->nullable();
             $table->text('company_public_response')->nullable();
             $table->string('company')->nullable()->index();
             $table->string('state')->nullable();
@@ -33,7 +33,7 @@ class CreateComplaintsTable extends Migration
             $table->string('timely')->nullable();
             $table->string('consumer_disputed')->nullable();
             $table->integer('complaint_id')->unique();
-            $table->integer('what_happened_count')->nullable();
+            $table->integer('what_happened_count')->nullable()->index();
             $table->timestamps();
         });
     }

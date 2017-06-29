@@ -11,6 +11,7 @@ class ListController extends Controller
     public function index()
     {
         $companies = Complaint::select('company',  DB::raw('COUNT(*) as count'))
+            ->where(DB::raw('date_received < DATE_SUB(NOW(), INTERVAL 1 YEAR)'))
             ->groupBy('company')
             ->take(10)
             ->orderByRaw('COUNT(*) DESC')

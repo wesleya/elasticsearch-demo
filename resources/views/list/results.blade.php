@@ -10,6 +10,12 @@
         </div>
     </div>
 
+    <div v-if="isSearching()">
+        <div class="jumbotron jumbotron-fluid" style="background-color: transparent; margin-bottom: 0px;">
+            <p class="text-center">Searching...</p>
+        </div>
+    </div>
+
     <div  v-if="results.length" v-cloak>
         <br/>
         <button type="button"

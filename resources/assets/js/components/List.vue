@@ -7,7 +7,7 @@
 
         data(){
             return{
-                product_type: '',
+                product_type: 0,
                 page: 0,
                 limit: 10,
                 searching: false,

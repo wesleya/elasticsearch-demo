@@ -12,7 +12,7 @@ require('./bootstrap');
  * the body of the page. From here, you may begin adding components to
  * the application, or feel free to tweak this setup for your needs.
  */
-Vue.component('home', require('./components/Home.vue'));
+Vue.component('search', require('./components/Search.vue'));
 Vue.component('complaint', require('./components/Complaint.vue'));
 
 const app = new Vue({

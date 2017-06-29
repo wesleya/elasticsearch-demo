@@ -1,7 +1,7 @@
 <div class="list-group">
 
     <div v-for="result in results">
-        @include('complaint')
+        @include('search.complaint')
     </div>
 
     <div v-if="noResults()">

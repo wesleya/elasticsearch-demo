@@ -6,3 +6,50 @@
   background-color: lightcyan;
   font-style: inherit;
 }
+
+/* Responsive text size for headers */
+
+@include media-breakpoint-up(xs) {
+  .display-1 {
+    font-size: 4.5em;
+  }
+  .lead {
+    font-size: 1.75em;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .display-1 {
+    font-size: 4.75em;
+  }
+  .lead {
+    font-size: 2em;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .display-1 {
+    font-size: 5em;
+  }
+  .lead {
+    font-size: 2.25em;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .display-1 {
+    font-size: 5.5em;
+  }
+  .lead {
+    font-size: 2.5em;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .display-1 {
+    font-size: 6em;
+  }
+  .lead {
+    font-size: 2.75em;
+  }
+}

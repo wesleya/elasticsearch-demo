@@ -5,7 +5,7 @@
 
         <div class="jumbotron jumbotron-fluid" style="background-color: transparent; margin-bottom: 0px;">
             <p class="display-1">Consumer Finance Complaints</p>
-            <p class="lead"><a href="#search" class="text-justify">Search</a> complaints, <a href="#view">view</a> the worst companies, or <a href="#submit">submit</a> a new complaint.</p>
+            <p class="lead"><a href="/search" class="text-justify">Search</a> complaints, <a href="/list">view</a> the worst companies, or <a href="#submit">submit</a> a new complaint.</p>
             <br/>
         </div>
 

@@ -8544,4 +8544,49 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
   font-style: inherit;
 }
 
+/* Responsive text size for headers */
+.display-1 {
+  font-size: 4.5em;
+}
+
+.lead {
+  font-size: 1.75em;
+}
+
+@media (min-width: 576px) {
+  .display-1 {
+    font-size: 4.75em;
+  }
+  .lead {
+    font-size: 2em;
+  }
+}
+
+@media (min-width: 768px) {
+  .display-1 {
+    font-size: 5em;
+  }
+  .lead {
+    font-size: 2.25em;
+  }
+}
+
+@media (min-width: 992px) {
+  .display-1 {
+    font-size: 5.5em;
+  }
+  .lead {
+    font-size: 2.5em;
+  }
+}
+
+@media (min-width: 1200px) {
+  .display-1 {
+    font-size: 6em;
+  }
+  .lead {
+    font-size: 2.75em;
+  }
+}
+
 /*# sourceMappingURL=app.css.map */

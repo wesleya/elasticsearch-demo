@@ -18,3 +18,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::get('v1/search', 'ApiSearchController@index');
+Route::get('v1/list', 'ApiListController@index');

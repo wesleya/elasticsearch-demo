@@ -16,6 +16,6 @@ class ListController extends Controller
             ->orderByRaw('COUNT(*) DESC')
             ->get();
 
-        return view('list/index', ['companies' => $companies]);
+        return view('list/index', ['companies' => json_encode($companies)]);
     }
 }

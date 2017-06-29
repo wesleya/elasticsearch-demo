@@ -13,6 +13,7 @@ require('./bootstrap');
  * the application, or feel free to tweak this setup for your needs.
  */
 Vue.component('search', require('./components/Search.vue'));
+Vue.component('list', require('./components/List.vue'));
 Vue.component('complaint', require('./components/Complaint.vue'));
 
 const app = new Vue({

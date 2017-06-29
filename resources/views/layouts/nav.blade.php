@@ -22,7 +22,7 @@
                 <a class="nav-link" href="/list">List</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/">Submit</a>
+                <a class="nav-link" href="https://www.consumerfinance.gov/complaint/getting-started/">Submit</a>
             </li>
         </ul>
     </div>

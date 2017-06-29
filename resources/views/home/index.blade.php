@@ -33,7 +33,7 @@
                     <div class="card-block">
                         <h4 class="card-title">Submit Complaints</h4>
                         <p class="card-text">Submit your own complaint to the Consumer Finance Protection Bureau (CFPB).</p>
-                        <a href="#" class="btn btn-primary">Start</a>
+                        <a href="https://www.consumerfinance.gov/complaint/getting-started/" class="btn btn-primary">Start</a>
                     </div>
                 </div>
             </div>

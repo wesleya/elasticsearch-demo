@@ -72,12 +72,7 @@
              * @param response
              */
             loadNewCallback: function(response) {
-
                 Vue.set(this, 'results', response.data);
-
-                if( this.emptySearch() ) {
-                    this.clearResults();
-                }
 
                 this.searching = false;
             },

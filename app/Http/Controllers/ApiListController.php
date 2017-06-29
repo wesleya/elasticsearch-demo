@@ -67,7 +67,6 @@ class ApiListController extends Controller
             ->offset($offset)
             ->take($limit)
             ->groupBy('company')
-            ->where(DB::raw('date_received < DATE_SUB(NOW(), INTERVAL 1 YEAR)'))
             ->orderByRaw('COUNT(*) DESC');
 
         if( !empty($products) ) {

@@ -59,7 +59,7 @@ class SummarizeComplaints extends Command
         return Complaint::select('company', 'product')
             ->addSelect(DB::raw('COUNT(*) as count'))
             ->groupBy('company', 'product')
-            ->where(DB::raw('date_received < DATE_SUB(NOW(), INTERVAL 1 YEAR)'))
+            ->where(DB::raw('date_received > DATE_SUB(NOW(), INTERVAL 1 YEAR)'))
             ->get();
     }
 

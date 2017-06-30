@@ -37,10 +37,11 @@ class SummarizeComplaints extends Command
      */
     public function handle()
     {
-        $this->info("querying for complaints...");
-        $complaints = $this->getComplaints();
-        $progress = $this->output->createProgressBar(count($complaints));
         $today = Carbon::now();
+
+        $this->info("querying for complaints...");
+        $complaints = $this->getComplaints($today);
+        $progress = $this->output->createProgressBar(count($complaints));
 
         foreach($complaints as $complaint) {
             $summary = $this->createSummaryRow($complaint, $today);
@@ -54,16 +55,16 @@ class SummarizeComplaints extends Command
         $this->info("completed!");
     }
 
-    protected function getComplaints()
+    protected function getComplaints(Carbon $currentDate)
     {
         return Complaint::select('company', 'product')
             ->addSelect(DB::raw('COUNT(*) as count'))
             ->groupBy('company', 'product')
-            ->where(DB::raw('date_received > DATE_SUB(NOW(), INTERVAL 1 YEAR)'))
+            ->where('date_received', '>', $currentDate->subYear())
             ->get();
     }
 
-    protected function createSummaryRow($complaint, $currentDate)
+    protected function createSummaryRow(Complaint $complaint, Carbon $currentDate)
     {
         $complaint->date_summarized = $currentDate;
 

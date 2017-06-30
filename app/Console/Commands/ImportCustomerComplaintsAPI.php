@@ -55,6 +55,8 @@ class ImportCustomerComplaintsAPI extends Command
     {
         $this->info("querying for complaints...");
         $complaints = $this->getComplaints($this->option('limit'));
+
+        $this->info("importing complaints...");
         $progress = $this->output->createProgressBar(count($complaints));
 
         foreach($complaints as $complaint) {

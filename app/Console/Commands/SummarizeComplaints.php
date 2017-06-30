@@ -41,6 +41,7 @@ class SummarizeComplaints extends Command
 
         $this->info("querying for complaints...");
         $complaints = $this->getComplaints($today);
+        $this->info("summarizing complaints...");
         $progress = $this->output->createProgressBar(count($complaints));
 
         foreach($complaints as $complaint) {
@@ -51,7 +52,6 @@ class SummarizeComplaints extends Command
         }
 
         $progress->finish();
-
         $this->info("completed!");
     }
 

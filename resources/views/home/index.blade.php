@@ -43,7 +43,7 @@
 
     </div>
     <div class="container">
-        <div class="jumbotron jumbotron-fluid" style="background-color: transparent; margin-bottom: 0px;">
+        <div class="jumbotron jumbotron-fluid text-center" style="background-color: transparent; margin-bottom: 0px;">
             <p class="display-4">Frequently Asked Questions</p>
         </div>
 
@@ -65,14 +65,14 @@
     </div>
 
     <div class="container">
-        <div class="jumbotron jumbotron-fluid" style="background-color: transparent; margin-bottom: 0px;">
+        <div class="jumbotron jumbotron-fluid text-center" style="background-color: transparent; margin-bottom: 0px;">
             <p class="display-4">Contact</p>
         </div>
 
         <div class="row">
-            <div class="col-xs-12 col-md-8" style="padding-bottom: 25px;">
+            <div class="col-xs-12 col-xl-12 text-center" style="padding-bottom: 25px;">
                 <p>Have a suggestion? contact me at <a href="mailto:consumerfinancecomplaints@gmail.com">consumerfinancecomplaints@gmail.com</a></p>
-            </div>
+             </div>
         </div>
     </div>
 

@@ -49,16 +49,16 @@
 
         <div class="row">
             <div class="col-xs-12 col-md-6" style="padding-bottom: 25px;">
-                <h3 class="card-title" style="font-weight:300;">Where is this data from?</h3>
-                <p class="card-text">Consumer complaints are collected by the <a href="https://www.consumerfinance.gov/">Consumer Finance Protection Bureau (CFPB)</a>. This data is shared with the public through an <a href="https://dev.socrata.com/foundry/data.consumerfinance.gov/jhzv-w97w">API</a> after scrubbing personal information.</p>
+                <h3 style="font-weight:300;">Where is this data from?</h3>
+                <p>Consumer complaints are collected by the <a href="https://www.consumerfinance.gov/">Consumer Finance Protection Bureau (CFPB)</a>. This data is shared with the public through an <a href="https://dev.socrata.com/foundry/data.consumerfinance.gov/jhzv-w97w">API</a> after scrubbing personal information.</p>
             </div>
             <div class="col-xs-12 col-md-6" style="padding-bottom: 25px;">
-                <h3 class="card-title" style="font-weight:300;">How often is this data updated?</h3>
-                <p class="card-text">CFPB updates their data daily. We try to pull those updates daily as well, but may fall behind by a day or two.</p>
+                <h3 style="font-weight:300;">How often is this data updated?</h3>
+                <p>CFPB updates their data daily. We try to pull those updates daily as well, but may fall behind by a day or two.</p>
             </div>
             <div class="col-xs-12 col-md-6" style="padding-bottom: 25px;">
-                <h3 class="card-title" style="font-weight:300;">What is your relation to CFPB?</h3>
-                <p class="card-text">We are not connected to CFPB in any way. We just thought this was a cool project to build on top of the data they make freely available for anyone to use.
+                <h3 style="font-weight:300;">What is your relation to CFPB?</h3>
+                <p>I'm are not connected to CFPB in any way. I just thought this was a cool personal project to build on top of the data they make freely available for anyone to use.
                 </p>
             </div>
         </div>
@@ -70,14 +70,8 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-12" style="padding-bottom: 25px;">
-
-            </div>
-            <div class="col-xs-12">
-
-            </div>
-            <div class="col-xs-12" style="padding-bottom: 25px;">
-
+            <div class="col-xs-12 col-md-8" style="padding-bottom: 25px;">
+                <p>Have a suggestion? contact me at <a href="mailto:consumerfinancecomplaints@gmail.com">consumerfinancecomplaints@gmail.com</a></p>
             </div>
         </div>
     </div>

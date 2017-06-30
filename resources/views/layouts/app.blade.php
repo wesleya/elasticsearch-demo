@@ -14,6 +14,8 @@
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 
+    <!-- google mail verification -->
+    <meta name="google-site-verification" content="jMxNq_QV4YR602FkIzL5YKItFTE-GnP5QKB399L57ns" />
 </head>
 <body style="height: 100%;">
 

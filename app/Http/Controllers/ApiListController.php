@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ComplaintSummaries;
 use Illuminate\Http\Request;
 use App\Complaint;
 use Illuminate\Support\Facades\DB;
@@ -63,11 +64,10 @@ class ApiListController extends Controller
         $offset = empty($page) ? 0 : ($page + 1) * $limit;
         $products = $this->getProducts($type);
 
-        $query = Complaint::select('company',  DB::raw('COUNT(*) as count'))
+        $query = ComplaintSummaries::select('company',  'count')
             ->offset($offset)
             ->take($limit)
-            ->groupBy('company')
-            ->orderByRaw('COUNT(*) DESC');
+            ->orderBy('count', 'desc');
 
         if( !empty($products) ) {
             $query->whereIn('product', $products);

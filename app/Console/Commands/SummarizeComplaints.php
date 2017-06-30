@@ -21,7 +21,6 @@ class SummarizeComplaints extends Command
      */
     protected $signature = 'summarize:complaints
         {--throttle=1000 : microseconds to throttle between each document. default 1000.}
-        {--production} : send data to elasticsearch instance. dry run otherwise.
         ';
 
     /**
@@ -43,7 +42,6 @@ class SummarizeComplaints extends Command
         $progress = $this->output->createProgressBar(count($complaints));
         $today = Carbon::now();
 
-
         foreach($complaints as $complaint) {
             $summary = $this->createSummaryRow($complaint, $today);
 
@@ -52,6 +50,7 @@ class SummarizeComplaints extends Command
         }
 
         $progress->finish();
+
         $this->info("completed!");
     }
 
@@ -60,6 +59,7 @@ class SummarizeComplaints extends Command
         return Complaint::select('company', 'product')
             ->addSelect(DB::raw('COUNT(*) as count'))
             ->groupBy('company', 'product')
+            ->where(DB::raw('date_received < DATE_SUB(NOW(), INTERVAL 1 YEAR)'))
             ->get();
     }
 
@@ -67,6 +67,11 @@ class SummarizeComplaints extends Command
     {
         $complaint->date_summarized = $currentDate;
 
-        return ComplaintSummaries::create($complaint->toArray());
+        $exists = [
+            'company' => $complaint->company,
+            'product' => $complaint->product
+        ];
+
+        return ComplaintSummaries::updateOrCreate($exists, $complaint->toArray());
     }
 }

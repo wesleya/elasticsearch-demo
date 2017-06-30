@@ -20,6 +20,8 @@ class CreateComplaintSummariesTable extends Migration
             $table->integer('count');
             $table->date('date_summarized')->index();
             $table->timestamps();
+
+            $table->unique(['company', 'product']);
         });
     }
 

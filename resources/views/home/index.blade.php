@@ -54,11 +54,11 @@
             </div>
             <div class="col-xs-12 col-md-6" style="padding-bottom: 25px;">
                 <h3 style="font-weight:300;">How often is this data updated?</h3>
-                <p>CFPB updates their data daily. We try to pull those updates daily as well, but may fall behind by a day or two.</p>
+                <p>CFPB updates their data daily. I try to pull those updates daily as well, but may fall behind by a day or two.</p>
             </div>
             <div class="col-xs-12 col-md-6" style="padding-bottom: 25px;">
                 <h3 style="font-weight:300;">What is your relation to CFPB?</h3>
-                <p>I'm are not connected to CFPB in any way. I just thought this was a cool personal project to build on top of the data they make freely available for anyone to use.
+                <p>I'm not connected to CFPB in any way. I just thought this was a cool personal project to build on top of the data they make freely available for anyone to use.
                 </p>
             </div>
         </div>
